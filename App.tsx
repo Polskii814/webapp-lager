@@ -1,35 +1,53 @@
+// me/lager/App.tsx
 import { StatusBar } from 'expo-status-bar';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import warehouse from './assets/warehouse.jpg';
-import StockList from './components/Stock.tsx';
-import list from './components/Stock.tsx';
-//import Stock from './components/Stock.tsx';
+import Home from "./components/Home.tsx";
+import Pick from "./components/Pick.tsx";
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 
+
+const Tab = createBottomTabNavigator();
+const routeIcons = {
+  "Lager": "home",
+  "Plock": "list",
+};
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.base}>
-        <Text style={{ color: 'darkorange', fontSize: 50, marginBottom: 15 }}>Lager-Appen</Text>
-        <Image source={warehouse} style={{ width: 350, height: 240 }} />
-        <Text style={{ color: 'darkorange', fontSize: 25,  }}>Lagerförteckning</Text>
-        <StockList />
-        <StatusBar style="auto" />
-      </View>
+      <NavigationContainer>
+        <Tab.Navigator screenOptions={({ route }) => ({
+    tabBarIcon: ({ focused, color, size }) => {
+      let iconName;
+
+      if (route.name === "Lager") {
+          iconName = "home";
+      } else if (route.name === "Plock")  {
+          iconName = "list";
+      } else {
+          iconName = "alert";
+      }
+
+      return <Ionicons name={iconName} size={size} color={color} />;
+    },
+    tabBarActiveTintColor: 'orange',
+    tabBarInactiveTintColor: 'gray',
+  })}
+>
+  <Tab.Screen name="Lager" component={Home} />
+  <Tab.Screen name="Plock" component={Pick} />
+</Tab.Navigator>
+      </NavigationContainer>
+      <StatusBar style="auto" />
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  base: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingLeft: 12,
-    paddingRight: 12,
-  }
 });
